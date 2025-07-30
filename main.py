@@ -2,7 +2,7 @@ import cloudscraper
 from bs4 import BeautifulSoup
 import time
 import random
-import os
+import traceback
 import apprise
 import sys
 
@@ -220,6 +220,7 @@ def main():
             break
         except Exception as e:
             print(f"Error in main loop: {e}")
+            traceback.print_exc()
             print("Waiting 30 seconds before retrying...")
             time.sleep(30)
 
