@@ -19,7 +19,7 @@ sudo apt install -y python3 python3-pip python3-venv python3-dev
 
 # Install additional system dependencies that might be needed
 echo "🔧 Installing system dependencies..."
-sudo apt install -y curl wget git build-essential libssl-dev libffi-dev
+sudo apt install -y curl wget git build-essential libssl-dev libffi-dev screen
 
 # Create virtual environment
 echo "🌍 Creating Python virtual environment..."

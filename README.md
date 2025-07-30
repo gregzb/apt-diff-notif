@@ -45,9 +45,22 @@ A Python script that monitors apartment listings for changes and sends notificat
    - The Pier Apartments
    - Portside Towers
 
+   **Background Options:**
+   ```bash
+   # Run in background (survives terminal close)
+   ./run.sh --background
+   
+   # Run in screen sessions (interactive, survives terminal close)
+   ./run.sh --screen
+   ```
+
    Or monitor a specific property:
    ```bash
    ./run.sh 'https://www.equityapartments.com/new-york-city/jersey-city/the-pier-apartments' 'The Pier Apartments'
+   
+   # With background options
+   ./run.sh 'URL' 'INSTANCE_NAME' --background
+   ./run.sh 'URL' 'INSTANCE_NAME' --screen
    ```
 
 ## Usage
@@ -56,22 +69,43 @@ A Python script that monitors apartment listings for changes and sends notificat
 # Run default monitors (The Pier Apartments + Portside Towers)
 ./run.sh
 
+# Run in background (survives terminal close)
+./run.sh --background
+
+# Run in screen sessions (interactive, survives terminal close)
+./run.sh --screen
+
 # Or monitor a specific property
 ./run.sh <URL> <INSTANCE_NAME>
+
+# With background options
+./run.sh <URL> <INSTANCE_NAME> --background
+./run.sh <URL> <INSTANCE_NAME> --screen
 ```
 
 **Parameters:**
 - No parameters: Runs default monitors for both The Pier Apartments and Portside Towers
 - `URL`: The Equity Apartments property URL to monitor
 - `INSTANCE_NAME`: A friendly name for the property (appears in notifications)
+- `--background` or `--bg`: Run in background using nohup (logs to apartment_monitor.log)
+- `--screen`: Run in detached screen sessions (interactive, can reattach later)
 
 **Examples:**
 ```bash
-# Default monitoring (recommended)
+# Default monitoring (foreground)
 ./run.sh
+
+# Default monitoring (background - survives terminal close)
+./run.sh --background
+
+# Default monitoring (screen sessions)
+./run.sh --screen
 
 # Custom property monitoring
 ./run.sh 'https://www.equityapartments.com/new-york-city/jersey-city/the-pier-apartments' 'The Pier Apartments'
+
+# Custom property in background
+./run.sh 'https://www.equityapartments.com/new-york-city/jersey-city/the-pier-apartments' 'The Pier Apartments' --background
 ```
 
 ## How It Works
@@ -90,7 +124,63 @@ A Python script that monitors apartment listings for changes and sends notificat
 
 ## Running in Background
 
-To run the monitors in the background (survives SSH disconnection):
+The script now has built-in background options that survive terminal disconnection:
+
+### Option 1: Background with nohup (Simple)
+```bash
+# Default monitors
+./run.sh --background
+
+# Custom property
+./run.sh 'URL' 'INSTANCE_NAME' --background
+```
+
+**Features:**
+- Runs in background, survives terminal close
+- Logs to `apartment_monitor.log`
+- Simple to use
+
+**Management:**
+```bash
+# Check logs
+tail -f apartment_monitor.log
+
+# Stop all monitors
+pkill -f "python main.py"
+```
+
+### Option 2: Screen sessions (Interactive)
+```bash
+# Default monitors (creates multiple screen sessions)
+./run.sh --screen
+
+# Custom property
+./run.sh 'URL' 'INSTANCE_NAME' --screen
+```
+
+**Features:**
+- Each monitor runs in its own screen session
+- Can reattach to sessions for interactive monitoring
+- Survives terminal close
+
+**Management:**
+```bash
+# List all screen sessions
+screen -list
+
+# Attach to a specific monitor
+screen -r apt_the_pier_apartments
+screen -r apt_portside_towers
+
+# Detach from session (while attached)
+Ctrl+A, then D
+
+# Stop all monitors
+pkill -f "python main.py"
+```
+
+### Legacy Method (Manual nohup)
+If you prefer the old manual approach:
 
 ```bash
 # Default monitors
@@ -98,16 +188,6 @@ nohup ./run.sh > monitor.log 2>&1 &
 
 # Custom property
 nohup ./run.sh 'URL' 'INSTANCE_NAME' > monitor.log 2>&1 &
-```
-
-Check the log:
-```bash
-tail -f monitor.log
-```
-
-Stop the background process:
-```bash
-pkill -f "python main.py"
 ```
 
 ## Troubleshooting
