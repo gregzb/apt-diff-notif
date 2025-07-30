@@ -154,7 +154,7 @@ def main():
     scraper = cloudscraper.create_scraper()
     prev_found_units = []
     scraper_created_time = time.time()
-    scraper_renewal_interval = 10 * 60
+    scraper_renewal_interval = 15 * 60
 
     print("Starting apartment monitoring loop...")
     print(f"Monitoring: {instance_name}")
@@ -168,7 +168,7 @@ def main():
             time_since_scraper_creation = current_time - scraper_created_time
 
             renewal_offset = random.gauss(
-                0, 120
+                0, 180
             )  # Normal distribution with std=2 minutes
             actual_renewal_time = scraper_renewal_interval + renewal_offset
 
@@ -203,8 +203,8 @@ def main():
             else:
                 print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] No changes detected")
 
-            offset = random.gauss(0, 20)
-            sleep_time = 70 + offset
+            offset = random.gauss(0, 30)
+            sleep_time = 130 + offset
 
             # offset = random.gauss(0, 5)
             # sleep_time = 10 + offset
@@ -222,7 +222,7 @@ def main():
             print(f"Error in main loop: {e}")
             traceback.print_exc()
             print("Waiting 30 seconds before retrying...")
-            time.sleep(30)
+            time.sleep(300)
 
 
 if __name__ == "__main__":
